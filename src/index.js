@@ -1,57 +1,74 @@
-/**
- * const and let
- */
+import "./styles.css";
 
-// let val1 = "this is the let variable";
-// console.log(val1);
-// const val2 = "This is the const variable";
-// console.log(val2);
-// const obj1 = {
-//   name: "Yu",
-//   age: 22
-// };
-// console.log(obj1);
-// const obj2 = ["100", "101", "110"];
-// obj2.push("210");
-// console.log(obj2);
+const onClickAdd = () => {
+  const inputText = document.getElementById("add-text").value;
+  document.getElementById("add-text").value = "";
 
-/**
- * template string
- */
-// const name = "Yu";
-// const age = "22";
-// console.log(`Hi, I'm ${name} and ${age} years old`);
+  addToIncompleteList(inputText);
+};
 
-/**
- * arrow function
- */
-// const times10 = (arr) => {
-//   for (let i in arr) {
-//     arr[i] *= 10;
-//   }
-//   return arr;
-// };
-// console.log(times10(obj2));
-// const { name, age } = obj1;
-// console.log(`Hi, I'm ${name} and ${age} years old`);
-// const [num1, num2] = obj2;
-// console.log(`cpsc${num1}, cpsc${num2}.`);
+const addToIncompleteList = (text) => {
+  // create li, div and p
+  const li = document.createElement("li");
+  const div = document.createElement("div");
+  div.className = "list-row";
+  const p = document.createElement("p");
+  p.className = "list-title";
+  p.innerText = text;
+  // create button
+  const completeButton = document.createElement("button");
+  completeButton.innerText = "Complete";
+  completeButton.addEventListener("click", () => {
+    const completeTarget = completeButton.parentNode.parentNode;
+    // delete from incomplete
+    deleteTargetFromIncompleteList(completeTarget);
+    // add to complete
+    const text = completeTarget.firstElementChild.firstElementChild.innerText;
+    completeTarget.textContent = null;
+    const div = document.createElement("div");
+    div.className = "list-row";
+    const p = document.createElement("p");
+    p.className = "list-title";
+    p.innerText = text;
 
-/**
- * spread statement
- */
-// const arr1 = [1, 2];
-// const sumFunc = (num1, num2) => {
-//   return num1 + num2;
-// };
-// console.log(sumFunc(...arr1));
+    const returnButton = document.createElement("button");
+    returnButton.innerText = "Return";
+    returnButton.addEventListener("click", () => {
+      const deleteTarget = returnButton.parentNode.parentNode;
+      deleteTargetFromCompleteList(deleteTarget);
+      const text = deleteTarget.firstElementChild.firstElementChild.innerText;
+      addToIncompleteList(text);
+    });
 
-/**
- * map and filter function
- */
-const nameArr = ["Yu", "John", "Roy", "Heyley"];
-// nameArr.map((name) => console.log(name + " Nishiura"));
-const numArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const newnumArr = numArr.filter((num) => num % 2 === 1);
-console.log(newnumArr);
-nameArr.map((name, idx) => console.log(`${idx}: ${name} Nishimura`));
+    div.appendChild(p);
+    div.appendChild(returnButton);
+    completeTarget.appendChild(div);
+
+    document.getElementById("complete-list").appendChild(completeTarget);
+  });
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "Delete";
+  deleteButton.addEventListener("click", () => {
+    const deleteTarget = deleteButton.parentNode.parentNode;
+    deleteTargetFromIncompleteList(deleteTarget);
+  });
+
+  // li > div > p
+  div.appendChild(p);
+  div.appendChild(completeButton);
+  div.appendChild(deleteButton);
+  li.appendChild(div);
+  console.log(li);
+
+  // append incomlete list
+  document.getElementById("incomplete-list").appendChild(li);
+};
+
+const deleteTargetFromIncompleteList = (target) => {
+  document.getElementById("incomplete-list").removeChild(target);
+};
+const deleteTargetFromCompleteList = (target) => {
+  document.getElementById("complete-list").removeChild(target);
+};
+
+document.getElementById("add-button").addEventListener("click", onClickAdd);
